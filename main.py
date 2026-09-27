@@ -16,7 +16,7 @@ memory = psutil.virtual_memory().total/(2**20)
 memory_used = psutil.virtual_memory().used/(2**20)
 memory_free = psutil.virtual_memory().free/(2**20)
 
-processes = []
+processes_all = []
 
 for process in psutil.process_iter(
     attrs = ['pid', 'name', 'status', 'create_time', 'memory_info'],
@@ -27,31 +27,23 @@ for process in psutil.process_iter(
     name = info_prog['name']
     status = info_prog['status']
     create_time = info_prog['create_time']
-    try:
-        cpu_per = process.cpu_percent(interval=1)
-
-    except (
-        psutil.AccessDenied,
-        psutil.NoSuchProcess,
-        psutil.ZombieProcess
-    ):
-        continue
     memory_info = info_prog['memory_info']
-    if (memory_info is not None) and (status == psutil.STATUS_RUNNING) and (cpu_per > 0):
+    time_prog = datetime.fromtimestamp(create_time)
+    if (memory_info is not None) and (status == psutil.STATUS_RUNNING):
         memory_info = memory_info.rss/(2**20)
         prog = {
             'pid': pid,
             'name': name,
             'status': status,
-            'cpu_percent': cpu_per,
             'memory_info': memory_info,
-            'create_time': create_time,
+            'create_time': time_prog.strftime("%d.%m.%Y %H:%M:%S"),
         }
-        processes.append(prog)
+        processes_all.append(prog)
 
-processes.sort(key=lambda proc: (proc["memory_info"], proc["cpu_percent"]), reverse=True)
+processes_all.sort(key=lambda proc: proc["memory_info"], reverse=True)
 
-information = {
+
+info_and_proc = {
     'OC': name_os,
     'version_OS': info.release,
     'Name_computer': info.node,
@@ -64,7 +56,18 @@ information = {
     'ip_pc': ip,
     'Time': time.strftime("%d.%m.%Y %H:%M:%S"),
     'Python_path': sys.executable,
+    'process_1': processes_all[0],
+    'process_2': processes_all[1],
+    'process_3': processes_all[2],
+    'process_4': processes_all[3],
+    'process_5': processes_all[4],
+    'process_6': processes_all[5],
+    'process_7': processes_all[6],
+    'process_8': processes_all[7],
+    'process_9': processes_all[8],
+    'process_10': processes_all[9],
 }
 
-print(information)
-print(processes)
+
+with open("system_info.json", "w", encoding="utf-8") as file:
+    json.dump(info_and_proc, file, ensure_ascii= False, indent = 2)

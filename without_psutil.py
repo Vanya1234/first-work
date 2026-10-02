@@ -2,7 +2,6 @@ import platform, os, socket, sys, json
 from datetime import datetime
 
 name_os = platform.system()
-arc = platform.machine()
 username = os.environ.get("USERNAME") or os.environ.get("USER")
 hostname = socket.gethostname()
 ip = socket.gethostbyname(hostname)

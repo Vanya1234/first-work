@@ -1,4 +1,4 @@
-import platform, os, socket, sys, json, locale
+import platform, os, socket, sys, json
 from datetime import datetime
 import psutil
 
@@ -11,7 +11,6 @@ proc = platform.processor()
 info = platform.uname()
 cores = os.cpu_count()
 time = datetime.now()
-language = locale.getlocale()
 memory = psutil.virtual_memory().total/(2**20)
 memory_used = psutil.virtual_memory().used/(2**20)
 memory_free = psutil.virtual_memory().free/(2**20)
